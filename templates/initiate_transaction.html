@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+<head>
+	{% block title %}
+	<title>Transferencia de Fondos - NeoWave Bank</title>
+	{% endblock %}
+	{% block stylecontent %}
+		<link href="{% static 'css/form.css' %}" rel="stylesheet">
+	{% endblock %}
+</head>
+<body>
+	{% block bodycontent %}
+	<section>
+		<div class="container">
+			<div class="content">
+				<form method="post" class="form">
+				<h1 class="h1er">Transferencia de Fondos</h1><br>
+
+				{% for message in messages %}
+				<h5>{{message}}</h5>
+				{% endfor %}
+					{% csrf_token %}
+					<p class="input">Seleccionar Cuenta Origen:</p>
+					<select name="sender_account">
+						{% for account in sender_accounts %}
+							<option value="{{ account.id }}">{{ account.account_number }}</option>
+						{% endfor %}
+					</select>
+					<p class="input">Número de Cuenta del Beneficiario:</p>
+					<input type="text" name="beneficiary_account_number" required>
+					<p class="input">Código IFSC del Beneficiario:</p>
+					<input type="text" name="beneficiary_ifsc" required>
+					<p class="input">Nombre del Beneficiario:</p>
+					<input type="text" id="beneficiary_name" readonly>
+					<p class="input">Cantidad</p>
+					<input type="number" name="amount" step="0.01" min="0.01" required>
+					<p class="input">Contraseña:</p>
+					<input type="password" name="password" required>
+					<br><br>
+					<button type="submit">Iniciar Transferencia</button><br><br>
+					<a href="{% url 'useraccounts' %}">Volver a Cuentas</a>
+				</form>
+			</div>
+		</div>
+	</section>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+	$(document).ready(function() {
+		$('input[name="beneficiary_account_number"], input[name="beneficiary_ifsc"]').on('input', function() {
+			var accountNumber = $('input[name="beneficiary_account_number"]').val();
+			var ifsc = $('input[name="beneficiary_ifsc"]').val();
+			
+			// Hacer petición AJAX para obtener el nombre del beneficiario
+			$.ajax({
+				url: '/get_beneficiary_name/',
+				type: 'GET',
+				data: {
+					'account_number': accountNumber,
+					'ifsc': ifsc
+				},
+				success: function(response) {
+					$('#beneficiary_name').val(response.beneficiary_name);
+				},
+				error: function(xhr, status, error) {
+					console.error(xhr.responseText);
+				}
+			});
+		});
+	});
+	</script>
+	{% endblock%}
+</body>

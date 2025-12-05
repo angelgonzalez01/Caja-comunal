@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+<head>
+	{% block title %}
+	<title>Cuentas de Usuario - NeoWave Bank</title>
+	{% endblock %}
+
+	{% block stylecontent %}
+	<link href="{% static 'css/modal.css' %}" rel="stylesheet">
+	<link href="{% static 'css/animation.css' %}" rel="stylesheet">
+	<link href="{% static 'css/table.css' %}" rel="stylesheet">
+	<link href="{% static 'css/form.css' %}" rel="stylesheet">
+	<style>
+		.newAcct {
+			max-width: 50%;
+			display: block;
+			margin: 0 auto;
+		}
+
+
+		/* Beautify user ID, first name, and last name */
+		.user-details {
+			text-align: center;
+			background-color: rgba(255, 255, 255, 0.15);
+			backdrop-filter: blur(10px);
+			color: black;
+			padding: 20px;
+			border-radius: 10px;
+			margin: 0 auto;
+			width: fit-content;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			margin-bottom: 20px; /* Add some bottom margin for spacing */
+		}
+		.h1er {
+	text-align: center; 
+	background-color: rgba(255, 255, 255, 0.15); 
+	backdrop-filter: blur(10px); 
+	color: black; 
+	padding: 20px; 
+	border-radius: 10px;
+	margin: 0 auto; /* Center the div horizontally */
+	width: fit-content; /* Adjust width based on content */
+	
+}
+	</style>
+	{% endblock %}
+</head>
+<body>
+	{% block bodycontent %}
+	<section>
+		<div class="container">
+			<div class="content">
+				<!-- Beautify user ID, first name, and last name -->
+				<div class="user-details">
+					<h1>Cuentas de Usuario</h1><br>
+					<h3>ID de Usuario: {{ user.username }}</h3>
+					<h3>{{ request.user.profile.firstname }} {{ request.user.profile.lastname }}</h3>
+				</div>
+
+				{% if accounts %}
+					<table>
+						<thead>
+							<tr>
+								<th>Número de Cuenta</th>
+								<th>Nombre de Sucursal</th>
+								<th>IFSC</th>
+								<th>Saldo</th>
+								<th>Fecha de Apertura</th>
+								<th>Activa</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for account in accounts %}
+								<tr class="clickable" onclick="openPopup('{{ account.account_number }}')">
+									<td>{{ account.account_number }}</td>
+									<td>{{ account.branch_name }}</td>
+									<td>{{ account.ifsc }}</td>
+									<td>{{ account.balance }}</td>
+									<td>{{ account.opened_date }}</td>
+									<td>{{ account.is_active }}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+					<p>No se encontraron cuentas.</p>
+				{% endif %}
+				<br><br>
+				<a href="createaccount"><button class="newAcct">Crear Nueva Cuenta</button></a>
+
+				<div id="branchChangeModal" class="modal">
+						<form id="branchChangeForm" method="post" class="animation">
+							<div><span class="close" onclick="closeModal()">&times;</span><br></div>
+							{% csrf_token %}
+							<input type="hidden" id="accountNumber" name="account_number" value="">
+							<h2>Cambiar Sucursal</h2><br>
+							<label for="branch">Seleccionar Sucursal:</label>
+							<select name="branch" id="branch">
+								{% for branch in branches %}
+									<option value="{{ branch.id }}">{{ branch.branch_name }} ({{ branch.ifsc }})</option>
+								{% endfor %}
+							</select><br><br>
+							<button type="button" onclick="branchChange()">Cambiar Sucursal</button>
+						</form>
+				</div>
+
+
+				<script>
+					function closeModal() {
+						document.getElementById("branchChangeModal").style.display = "none";
+					}
+					function openPopup(accountNumber) {
+						document.getElementById("branchChangeModal").style.display = "block";
+						document.getElementById("accountNumber").value = accountNumber;
+					}
+
+					function branchChange() {
+						var formElement = document.getElementById("branchChangeForm");
+						var formData = new FormData(formElement);
+
+						fetch("{% url 'change_branch' %}", {
+							method: 'POST',
+							body: formData,
+							headers: {
+								'X-CSRFToken': '{{ csrf_token }}'
+							}
+						})
+							.then(response => {
+								if (response.ok) {
+									console.log("Sucursal cambiada exitosamente.");
+									closeModal(); // Cerrar el modal después de cambiar la sucursal
+									location.reload(); // Recargar la página para ver los cambios
+								} else {
+									throw new Error("Error al cambiar la sucursal.");
+								}
+							})
+							.catch(error => {
+								console.error('Error al cambiar la sucursal:', error);
+								alert('Ocurrió un error al intentar cambiar la sucursal.');
+								closeModal(); // Cerrar el modal en caso de error
+							});
+					}
+				</script>
+			</div>
+		</div>
+	</section>
+	{% endblock%}
+</body>

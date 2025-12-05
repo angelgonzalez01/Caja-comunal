@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+<head>
+	{% block title %}
+	<title>Cheques - NeoWave Bank</title>
+	{% endblock %}
+
+	{% block stylecontent %}
+	<link href="{% static 'css/modal.css' %}" rel="stylesheet">
+	<link href="{% static 'css/animation.css' %}" rel="stylesheet">
+	<link href="{% static 'css/form.css' %}" rel="stylesheet">
+	<link href="{% static 'css/table.css' %}" rel="stylesheet">
+	<link href="{% static 'css/style1.css' %}" rel="stylesheet">
+
+		<style>
+			.input {
+				margin-bottom: 1rem;
+			}
+		</style>
+	{% endblock %}
+</head>
+<body>
+	{% block bodycontent %}
+	<section>
+		<div class="container">
+			<div class="content">
+				<h1>Cheque Details</h1>
+				<form id="account_form" method="GET" action="{% url 'cheque_details' %}" class="form">
+					<p class="input">Select Account</p>
+					<select name="account_select" id="account_select" onchange="selectAccount()">
+						<option value="" {% if not selected_account %}selected{% endif %}>-</option>
+						{% for account in accounts %}
+							<option value="{{ account.account_number }}" {% if account == selected_account %}selected{% endif %}>{{ account.account_number }}</option>
+						{% endfor %}
+					</select>
+				</form><br>
+				
+				<table id="cheque_table">
+					{% if selected_account %}
+						<thead>
+							<tr>
+								<th>Date & Time</th>
+								<th>Cheque Number</th>
+								<th>Amount</th>
+								<th>Issuer</th>
+								<th>Recipient</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+					{% endif %}
+					<tbody>
+						{% for cheque in cheques reversed %}
+						<tr {% if cheque.status == 'pending' %}class="clickable" onclick="openPopup('{{ cheque.cheque_number }}')" {% endif %}>
+							<td>{{ cheque.created_at }}</td>
+							<td>{{ cheque.cheque_number }}</td>
+							<td>{{ cheque.amount }}</td>
+							<td>{{ cheque.issuer }}</td>
+							<td>{{ cheque.recipient }}</td>
+							<td class="{% if cheque.status == 'cleared' %}cleared{% elif cheque.status == 'pending' %}pending{% elif cheque.status == 'stopped' %}stopped{% endif %}">
+								{{ cheque.status|capfirst }}
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+
+				<div id="statusChangeModal" class="modal">
+					<form id="statusChangeForm" class="animation">
+						<div><span class="close" onclick="closeModal()">&times;</span><br></div>
+						{% csrf_token %}
+						<input type="hidden" id="chequeNumber" name="cheque_number" value="">
+							<h2>Change Cheque Status</h2><br>
+							<label for="stopReason">Stop Reason:</label>
+							<select id="stopReason" name="stop_reason">
+								<option value="">Select Stop Reason</option>
+								{% for choice in stop_reason_choices %}
+									<option value="{{ choice.0 }}">{{ choice.1 }}</option>
+								{% endfor %}
+							</select><br><br>
+							<button type="button" onclick="stopCheque()">Stop Cheque</button>
+					</form>
+				</div>
+				
+				
+
+				<script>
+					function selectAccount() {
+						document.getElementById("account_form").submit();
+					}
+
+
+					function closeModal() {
+						document.getElementById("statusChangeModal").style.display = "none";
+					}
+
+					function openPopup(chequeNumber) {
+						document.getElementById("statusChangeModal").style.display = "block";
+						document.getElementById("chequeNumber").value = chequeNumber;
+					}
+
+					function stopCheque() {
+						var formElement = document.getElementById("statusChangeForm");
+						var formData = new FormData(formElement);
+
+						var stopReason = document.getElementById("stopReason").value.trim();
+						if (stopReason === "") {
+							alert("Please select a stop reason.");
+							return;
+						}
+
+						fetch("{% url 'stop_cheque' %}", {
+							method: 'POST',
+							body: formData,
+						})
+						.then(response => {
+							if (response.ok) {
+								console.log("Cheque stopped successfully.");
+								closeModal();
+								location.reload();
+							} else {
+								throw new Error("Failed to stop cheque.");
+							}
+						})
+						.catch(error => {
+							console.error('Error stopping cheque:', error);
+							alert('An error occurred while stopping the cheque.');
+							closeModal();
+						});
+					}
+				</script>
+			</div>
+		</div>
+	</section>
+	{% endblock%}
+</body>

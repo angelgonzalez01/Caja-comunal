@@ -1,0 +1,54 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+	{% block title %}
+	{% endblock %}
+	<meta content="" name="description">
+	<meta content="" name="keywords">
+
+	<link href="{% static 'assets/favicon.png' %}" rel="icon">
+
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+	
+	<link href="{% static 'css/style.css' %}" rel="stylesheet">
+	<link href="{% static 'css/nav.css' %}" rel="stylesheet">
+	{% block stylecontent %}
+	{% endblock %}
+</head>
+
+<body>
+
+
+	<header id="header">
+		<div class="navcontainer">
+			<h1 class="logo"><a href="/">NeoWave</a></h1>
+			{% if user.is_authenticated %}
+			<div class="dropdown">
+				<img src="{% static 'assets/usericon.png' %}" alt="Profile" class="service-icon">
+				<ul class="dropdown-menu">
+					<li><a href="/userdetails">Actualizar&nbsp;Perfil</a></li>
+					<li><a class="blue-button-white-text" href="/logout">Cerrar&nbsp;Sesión</a></li>
+				</ul>
+			</div>
+			{% else %}
+			<div class="sign">
+				<a href="/login"
+					class="signin white-button-blue-text">Iniciar&nbsp;Sesión</a>
+				<a href="/register"
+					class="signup blue-button-white-text">Registrarse</a>
+			</div>
+			{% endif %}
+		</div>
+	</header>
+		{% block bodycontent %}
+
+		{% endblock %}
+</body>
+
+</html>

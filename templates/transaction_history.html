@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+<head>
+	{% block title %}
+	<title>Historial de Transacciones - NeoWave Bank</title>
+	{% endblock %}
+
+	{% block stylecontent %}
+		<link href="{% static 'css/form.css' %}" rel="stylesheet">
+		<link href="{% static 'css/table.css' %}" rel="stylesheet">
+		<link href="{% static 'css/style1.css' %}" rel="stylesheet">
+		<style>
+			h1 {
+				text-align: center;
+			}
+
+			.fixed-bottom-button {
+				position: fixed;
+				bottom: 20px;
+				left: 25%;
+				width: 50%;
+				padding: 10px;
+				background-color: #007bff;
+				color: white;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+			}
+		
+			.button-background {
+				position: fixed;
+				bottom: 0px;
+				width: 100%;
+				height: 60px;
+				background-color: white;
+				padding: 10px;
+				z-index: 1;
+			}
+
+			.container {
+				margin-bottom: 150px;
+			}
+		</style>
+	{% endblock %}
+</head>
+<body>
+	{% block bodycontent %}
+	<section>
+		<div class="container">
+			<div class="content">
+				<form id="account_form" method="GET" action="{% url 'transaction_history' %}" class="form">
+					<h1 class="h1er">Historial de Transacciones</h1>
+					<p class="input">Seleccionar Cuenta</p>
+					<select name="account_select" id="account_select" onchange="selectAccount()">
+						<option value="" {% if not selected_account %}selected{% endif %}>-</option>
+						{% for account in accounts %}
+							<option value="{{ account.account_number }}" {% if account == selected_account %}selected{% endif %}>{{ account.account_number }}</option>
+						{% endfor %}
+					</select>
+				</form><br>
+				<table>
+					{% if selected_account %}
+						<thead>
+							<tr>
+								<th>Fecha y Hora</th>
+								<th>Número de Cuenta</th>
+								<th>Nombre</th>
+								<th>Número de Referencia</th>
+								<th>Cantidad</th>
+								<th>Saldo</th>
+							</tr>
+						</thead>
+					{% endif %}
+					<tbody>
+						{% for data in transaction_data reversed %}
+							<tr>
+								<td>{{ data.transaction.timestamp }}</td>
+								<td>
+									{% if data.transaction.sender_account == selected_account %}
+										Para: {{ data.transaction.receiver_account_number }}
+									{% else %}
+										De: {{ data.transaction.sender_account.account_number }}
+									{% endif %}
+								</td>
+								<td>
+									{% if data.transaction.sender_account == selected_account %}
+										{{ data.transaction.beneficiary_name }}
+									{% else %}
+										{{ data.transaction.sender_name }}
+									{% endif %}
+								</td>
+								<td>{{ data.transaction.bank_reference_no }}</td>
+								<td class="{% if data.transaction.sender_account == selected_account %}sent{% else %}received{% endif %}">
+									{% if data.transaction.sender_account == selected_account %}
+										<span style="color: red;">- ${{ data.transaction.amount }} (Enviado)</span>
+									{% else %}
+										<span style="color: green;">+ ${{ data.transaction.amount }} (Recibido)</span>
+									{% endif %}
+								</td>
+								<td>${{ data.balance }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table><br><br>
+			</div>
+		</div>
+	</section>
+	<div class="button-background">
+		<a href="/get_statement"><button class="fixed-bottom-button">Obtener Estado de Cuenta</button></a>
+	</div>
+	<script>
+		function selectAccount() {
+			document.getElementById("account_form").submit();
+		}
+	</script>
+	{% endblock%}
+</body>

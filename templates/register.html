@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+<head>
+	{% block title %}
+	<title>Abre tu Cuenta de Ahorros Digital - NeoWave Bank</title>
+	{% endblock %}
+	{% block stylecontent %}
+		<link href="{% static 'css/form.css' %}" rel="stylesheet">
+	{% endblock %}
+
+</head>
+<body>
+	{% block bodycontent %}
+	<section>
+		<div class="container">
+			<div class="content">
+				<form method="POST" action="register" class="form">
+				<h1>Abre tu Cuenta de Ahorros en Línea</h1>
+
+				{% for message in messages %}
+				<h5>{{message}}</h5>
+				{% endfor %}
+
+					{% csrf_token %}
+
+					<p class="input">Nombre</p>
+					<input type="text" name="firstname" placeholder="Ingresa tu nombre" />
+					<p class="input">Apellido</p>
+					<input type="text" name="lastname" placeholder="Ingresa tu apellido" />
+					<p class="input">Nombre del Padre</p>
+					<input type="text" name="fathername" placeholder="Nombre completo de tu padre" />
+					<p class="input">Nombre de la Madre</p>
+					<input type="text" name="mothername" placeholder="Nombre completo de tu madre" />
+					<p class="input">Dirección</p>
+					<p class="input">Calle y Número</p>
+					<input type="text" name="street" placeholder="Calle y número" />
+					<p class="input">Ciudad</p>
+					<input type="text" name="city" placeholder="Ciudad donde vives" />
+					<p class="input">Código Postal</p>
+					<input name="pincode" type="text" inputmode="numeric" pattern="[0-9]{6}" placeholder="Código postal de 6 dígitos">
+					<p class="input">Número de Teléfono</p>
+					<input name="mobilenumber" type="text" inputmode="numeric" pattern="[0-9]{10}" placeholder="Número a 10 dígitos">
+					<p class="input">Selecciona Sucursal</p>
+					<select name="branch">
+						{% for branch in branches %}
+							<option value="{{ branch.pk }}">{{ branch.branch_name }} ({{ branch.pincode}})</option>
+						{% endfor %}
+					</select>
+					
+					<p class="input">Crea un Nombre de Usuario</p>
+					<input type="text" name="username" placeholder="Elige un nombre de usuario" />
+					<p class="input">Correo Electrónico</p>
+					<input type="email" name="email" placeholder="tucorreo@ejemplo.com" />
+					<p class="input">Crea una Contraseña</p>
+					<input type="password" name="password" placeholder="Mínimo 8 caracteres" />
+					<p class="input">Confirma tu Contraseña</p>
+					<input type="password" name="password1" placeholder="Vuelve a escribir tu contraseña" /><br><br>
+					<input type="submit" class="button" value="Registrarse" />
+
+				</form>
+			</div>
+		</div>
+	</section>
+	{% endblock%}
+</body>

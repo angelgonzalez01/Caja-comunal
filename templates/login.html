@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+<head>
+	{% block title %}
+	<title>Iniciar Sesión - NeoWave Bank</title>
+	{% endblock %}
+	{% block stylecontent %}
+	<link href="{% static 'css/animation.css' %}" rel="stylesheet">
+	<link href="{% static 'css/lessWidthAnimation.css' %}" rel="stylesheet">
+	<link href="{% static 'css/form.css' %}" rel="stylesheet">
+	{% endblock %}
+</head>
+<body>
+	{% block bodycontent %}
+	<section class="container" >
+		<div class="container">
+			<div class="content">
+				<form action="login" method="POST" class="animation">
+				<h1>Iniciar Sesión</h1>
+				{% for message in messages %}
+				<h3>{{message}}</h3>
+				{% endfor %}
+					{% csrf_token %}
+					<p class="input">Nombre de Usuario</p>
+					<input type="text" name="username" placeholder="Ingresa tu nombre de usuario"/>
+					<p class="input">Contraseña</p>
+					<input type="password" name="password" placeholder="Ingresa tu contraseña" /><br>
+					<input type="submit" class="button" value="Iniciar Sesión" />
+					<br>
+					<a href="/register">Crear Nueva Cuenta</a>
+				</form>
+				
+			</div>
+		</div>
+	</section>
+	{% endblock%}
+</body>

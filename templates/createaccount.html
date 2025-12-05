@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+<head>
+	{% block title %}
+	<title>Create a New Account- NeoWave Bank</title>
+	{% endblock %}
+	{% block stylecontent %}
+	<link href="{% static 'css/animation.css' %}" rel="stylesheet">
+	<link href="{% static 'css/form.css' %}" rel="stylesheet">
+	{% endblock %}
+</head>
+<body>
+	{% block bodycontent %}
+	<style>
+				.h1er {
+		text-align: center; 
+		background-color: rgba(255, 255, 255, 0.15); 
+		backdrop-filter: blur(10px); 
+		color: black; 
+		padding: 20px; 
+		border-radius: 10px;
+		margin: 0 auto;
+		width: fit-content;
+}
+	</style>
+	<section>
+		<div class="container">
+			<div class="content">
+				<h1 class="h1er">Create New Account</h1>
+				<form method="post" class="animation">
+					{% csrf_token %}
+					<label for="branch">Select Branch:</label>
+					<select name="branch" id="branch">
+						{% for branch in branches %}
+							<option value="{{ branch.id }}">{{ branch.branch_name }} ({{ branch.ifsc }})</option>
+						{% endfor %}
+					</select>
+					<br><br>
+					<button type="submit">Create Account</button>
+					<br><br>
+					<a href="{% url 'useraccounts' %}" style="text-align: center;">Back to User Accounts</a>
+				</form>
+			</div>
+		</div>
+	</section>
+	{% endblock%}
+</body>
+</body>
