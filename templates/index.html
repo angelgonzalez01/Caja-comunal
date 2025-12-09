@@ -2,17 +2,21 @@
 {% load static %}
 <head>
 	{% block title %}
-	<title>NeoWave Bank - Banca Personal y Servicios de Banca en Línea</title>
+	<title>Verdecocha - Ahorros</title>
 	{% endblock %}
 	{% block stylecontent %}
 	<link href="{% static 'css/index-home.css' %}" rel="stylesheet">
 	<link href="{% static 'css/index-login.css' %}" rel="stylesheet">
 	<link href="{% static 'css/form.css' %}" rel="stylesheet">
 	<link href="{% static 'css/sub-footer.css' %}" rel="stylesheet">
+	<link href="{% static 'css/style.css' %}" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+	<link href="{% static 'css/start.css' %}" rel="stylesheet">
 	{% endblock %}
 </head>
 <body>
 	{% block bodycontent %}
+
 	{% if user.is_authenticated %}
 	<div class="welcome-div">
 		<h1>Bienvenido, {{ user.username }}</h1>
@@ -62,75 +66,66 @@
 	</section>
 	{% else %}
 
-	<section class="open-account">
+	<div class="admin-dashboard">
 		<div class="container">
-			<div class="content open-account-div">
-				<h1>PARA TODAS TUS NECESIDADES FINANCIERAS</h1>
-				<p class="manage-money">
-					Administra tu dinero con <span style="color: #2487CE;">tranquilidad</span></p>
-				<a href="./register" class="open-account-button">Abrir&nbsp;Cuenta&nbsp;de&nbsp;Ahorros</a>
-				<div class="open-account-image">
-					<img src="{% static 'assets/homepage.png' %}" alt="front page">
-				</div>
-				<h1>OBTÉN UNA CUENTA DE AHORROS<br>COMO NINGUNA OTRA</h1>
-			</div>
-		</div>
-	</section>
-
-	<section class="bank-flash">
-		<div class="container">
-			<div class="content">
-				<div class="bank-flash-div">
-					<div class="bank-flash-image">
-						<img src="{% static 'assets/zero balance.png' %}" alt="zero balance">
-					</div>
-					<div class="bank-flash-text">
-						<h3>BANCO EN SEGUNDOS</h3>
-						<b><h1>Banca a la Velocidad del Pensamiento: ¡Abre una Cuenta en un Instante!</h1></b>
-						<p>¡Experimenta la configuración de cuenta más rápida en solo 60 segundos! Crea tu cuenta bancaria en línea con facilidad. Sin papeleo, sin esperas: ¡comienza a operar en un instante!</p>
+			<div class="admin-dashboard-div">
+				<h1>BIENVENIDO AL PANEL ADMINISTRATIVO</h1>
+				<div class="welcome-message">
+					<p>En <span style="color: #2e7d32; font-weight: 600;">Verdecocha Ahorros</span>, su dinero está en las mejores manos. Nuestro compromiso es ofrecerle un servicio seguro, confiable y transparente para la administración de sus ahorros.</p>
+					
+					<div class="security-features">
+						<div class="feature">
+							<i class="fas fa-shield-alt"></i>
+							<h3>Seguridad Garantizada</h3>
+							<p>Protegemos sus ahorros con los más altos estándares de seguridad.</p>
+						</div>
+						<div class="feature">
+							<i class="fas fa-hand-holding-heart"></i>
+							<h3>Confianza</h3>
+							<p>Más de 10 años respaldando los sueños de nuestra comunidad.</p>
+						</div>
+						<div class="feature">
+							<i class="fas fa-chart-line"></i>
+							<h3>Crecimiento</h3>
+							<p>Su dinero trabaja para usted con las mejores tasas del mercado.</p>
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="welcome-gift">
-		<div class="container">
-			<div class="content">
-				<div class="welcome-gift-div">
-					<div class="welcome-gift-text">
-						<h3>REGALO DE BIENVENIDA EXCLUSIVO</h3>
-						<b><h1>¡Bienvenido a Nuestro Banco: Recibe $1000 como Regalo!</h1></b>
-						<p>¡Bienvenido a Nuestro Banco! Como nuevo usuario, estamos encantados de ofrecerte un regalo de bienvenida exclusivo de $1000 al abrir una cuenta con nosotros. Aprovecha esta oferta especial y comienza tu viaje bancario con nosotros hoy mismo.</p>
+				
+				<div class="quick-stats">
+					<div class="stat-card">
+						<i class="fas fa-hand-holding-usd"></i>
+						<h3>Préstamos</h3>
+						<p class="stat-text">Gestión de préstamos personales y grupales</p>
 					</div>
-					<div class="welcome-gift-image">
-						<img src="{% static 'assets/cashback.png' %}" alt="front page">
+					<div class="stat-card">
+						<i class="fas fa-piggy-bank"></i>
+						<h3>Ahorros</h3>
+						<p class="stat-text">Diferentes planes de ahorro disponibles</p>
+					</div>
+					<div class="stat-card">
+						<i class="fas fa-file-invoice-dollar"></i>
+						<h3>Servicios</h3>
+						<p class="stat-text">Pagos y cobranzas</p>
 					</div>
 				</div>
 			</div>
 		</div>
-	</section>
+	</div>
 
-	<footer>
+	<footer style="background-color: #2c3e50; color: white; padding: 20px 0; margin-top: 50px;">
 		<div class="container">
-			<div class="sub-footer">
-				<p>Pritam Shaw</p>
-				<div class="footer-box-social">
-					<ul>
-						<li><a href="https://github.com/thepritamshaw" target="_blank"><img
-									src="{% static 'assets/github-transparent.png' %}" alt="Github"></a>
-							<div class="placeholder"></div>
-						</li>
-						<li><a href="https://www.linkedin.com/in/thepritamshaw/" target="_blank"><img
-									src="{% static 'assets/linkedin-transparent.png' %}" alt="Linkedin"></a>
-							<div class="placeholder"></div>
-						</li>
-						<li><a href="https://www.twitter.com/thepritamshaw/" target="_blank"><img
-									src="{% static 'assets/twitter-transparent.png' %}" alt="Twitter"></a>
-							<div class="placeholder"></div>
-						</li>
-					</ul>
+			<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+				<p style="margin: 10px 0;"> 2025 Verdecocha Ahorros. Todos los derechos reservados.</p>
+				<div class="footer-social" style="display: flex; gap: 15px;">
+					<a href="#" style="color: white; font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
+					<a href="#" style="color: white; font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
+					<a href="#" style="color: white; font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
+					<a href="#" style="color: white; font-size: 1.2rem;"><i class="fab fa-linkedin"></i></a>
 				</div>
+			</div>
+			<div style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #bdc3c7;">
+				<p>Verdecocha Ahorros - Administración de Cajas Comunales</p>
 			</div>
 		</div>
 	</footer>
